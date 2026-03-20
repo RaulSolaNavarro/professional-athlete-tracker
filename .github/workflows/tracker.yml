@@ -1,0 +1,50 @@
+name: Jalen Williams Injury Tracker
+
+on:
+  schedule:
+    # Runs every 30 minutes
+    - cron: "0,30 * * * *"
+  workflow_dispatch:
+    # Allows you to run it manually from GitHub's website anytime
+
+jobs:
+  check-for-updates:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repo so the script is available
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Restore the state file from the previous run
+      # (so we don't re-alert on articles we've already seen)
+      - name: Restore seen-articles cache
+        uses: actions/cache@v4
+        with:
+          path: jw_tracker_state.json
+          key: jw-tracker-state
+
+      # Step 3: Install Python and dependencies
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: pip install feedparser twilio requests
+
+      # Step 4: Run the tracker (credentials injected from GitHub Secrets)
+      - name: Run tracker
+        env:
+          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+          TWILIO_AUTH_TOKEN:  ${{ secrets.TWILIO_AUTH_TOKEN }}
+          TWILIO_FROM_NUMBER: ${{ secrets.TWILIO_FROM_NUMBER }}
+          ALERT_TO_NUMBER:    ${{ secrets.ALERT_TO_NUMBER }}
+        run: python jalen_williams_tracker.py
+
+      # Step 5: Save the updated state file for the next run
+      - name: Save seen-articles cache
+        uses: actions/cache@v4
+        with:
+          path: jw_tracker_state.json
+          key: jw-tracker-state
