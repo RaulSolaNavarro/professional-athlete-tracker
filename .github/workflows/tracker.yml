@@ -10,6 +10,8 @@ on:
 jobs:
   check-for-updates:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       # Step 1: Check out the repo so the script is available
