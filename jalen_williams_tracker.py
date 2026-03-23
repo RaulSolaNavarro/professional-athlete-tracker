@@ -34,7 +34,8 @@ ALERT_TO_NUMBER    = os.environ["ALERT_TO_NUMBER"]
 PLAYER_NAME = "Jalen Williams"
 SEARCH_KEYWORDS = [
     "injury", "return", "out", "questionable", "day-to-day",
-    "doubtful", "activated", "cleared", "available", "ruled out"
+    "doubtful", "activated", "cleared", "available", "ruled out",
+    "probable", "off the injury report", "injury report", "back in lineup"
 ]
 STATE_FILE = "jw_tracker_state.json"
 
